@@ -38,7 +38,7 @@ export function registerWorkoutTools(
 
 	server.tool(
 		"get-workouts",
-		"Get a paginated list of workouts. Returns workout details including title, description, start/end times, and exercises performed. Results are ordered from newest to oldest.",
+		"Get a paginated list of workouts. Returns workout details including title, description, start/end times, and exercises performed. Results are ordered from newest to oldest. Weights are always returned in kg.",
 		getWorkoutsSchema,
 		withErrorHandling(async (args: GetWorkoutsParams) => {
 			if (!hevyClient) {
@@ -73,7 +73,7 @@ export function registerWorkoutTools(
 
 	server.tool(
 		"get-workout",
-		"Get complete details of a specific workout by ID. Returns all workout information including title, description, start/end times, and detailed exercise data.",
+		"Get complete details of a specific workout by ID. Returns all workout information including title, description, start/end times, and detailed exercise data. Weights are always returned in kg.",
 		getWorkoutSchema,
 		withErrorHandling(async (args: GetWorkoutParams) => {
 			if (!hevyClient) {
@@ -186,7 +186,7 @@ export function registerWorkoutTools(
 
 	server.tool(
 		"create-workout",
-		"Create a new workout in your Hevy account. Requires title, start/end times, and at least one exercise with sets. Returns the complete workout details upon successful creation including the newly assigned workout ID.",
+		"Create a new workout in your Hevy account. Requires title, start/end times, and at least one exercise with sets. Returns the complete workout details upon successful creation including the newly assigned workout ID. Weights should be submitted in kg values.",
 		createWorkoutSchema,
 		withErrorHandling(async (args: CreateWorkoutParams) => {
 			if (!hevyClient) {
@@ -277,7 +277,7 @@ export function registerWorkoutTools(
 
 	server.tool(
 		"update-workout",
-		"Update an existing workout by ID. You can modify the title, description, start/end times, privacy setting, and exercise data. Returns the updated workout with all changes applied.",
+		"Update an existing workout by ID. You can modify the title, description, start/end times, privacy setting, and exercise data. Weights should be submitted in kg values. Returns the updated workout with all changes applied.",
 		updateWorkoutSchema,
 		withErrorHandling(async (args: UpdateWorkoutParams) => {
 			if (!hevyClient) {
