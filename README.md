@@ -122,22 +122,6 @@ Replace `your_hevy_api_key_here` with your actual Hevy API key. If you prefer th
 pnpm start -- --hevy-api-key=your_hevy_api_key_here
 ```
 
-### Sentry monitoring
-
-`hevy-mcp` ships with Sentry monitoring baked into the built MCP server so
-that usage and errors from published builds can be observed.
-
-The server initializes `@sentry/node` with a fixed DSN, release name derived
-from the package version, and tracing settings
-directly in the code (see `src/index.ts`), and wraps the underlying
-`McpServer` with `Sentry.wrapMcpServerWithSentry` so requests and tool calls
-are captured by Sentry automatically. The configuration uses
-`sendDefaultPii: false` to keep Sentry's default PII collection disabled.
-
-There is currently no built-in toggle to disable Sentry for the published
-package. If you need a build without Sentry telemetry, you can fork the
-repository and remove the Sentry initialization in `src/index.ts`.
-
 ## Transport
 
 
@@ -362,21 +346,6 @@ To set up the `HEVY_API_KEY` secret:
 5. Click "Add secret"
 
 If the secret is not set, the integration tests will fail (by design).
-
-To set up Sentry secrets for source map uploads during builds:
-
-The build process uses Sentry's Rollup plugin to upload source maps. You need to configure three secrets:
-
-1. Go to your GitHub repository
-2. Click on "Settings" > "Secrets and variables" > "Actions"
-3. Add the following secrets:
-   - `SENTRY_ORG`: Your Sentry organization slug
-   - `SENTRY_PROJECT`: Your Sentry project slug
-   - `SENTRY_AUTH_TOKEN`: A Sentry auth token with `project:releases` scope
-
-   You can create a Sentry auth token at: https://sentry.io/settings/account/api/auth-tokens/
-
-If these secrets are not set, the build will still succeed, but source maps will not be uploaded to Sentry.
 
 Note: GitHub does not provide secrets to pull requests from forks by default, so
 fork PRs may fail CI unless a maintainer reruns the checks with `HEVY_API_KEY`

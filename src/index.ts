@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/node";
-
 declare const __HEVY_MCP_NAME__: string | undefined;
 declare const __HEVY_MCP_VERSION__: string | undefined;
 declare const __HEVY_MCP_BUILD__: boolean | undefined;
@@ -25,19 +23,6 @@ const version =
 // or set directly in the environment. No dotenv dependency needed.
 // This avoids stdout pollution that corrupts MCP JSON-RPC communication in stdio mode.
 
-// Sentry monitoring is baked into the built MCP server so usage and errors
-// from users of the published package are captured for observability.
-const sentryRelease = process.env.SENTRY_RELEASE ?? `${name}@${version}`;
-const sentryConfig = {
-	dsn: "https://ce696d8333b507acbf5203eb877bce0f@o4508975499575296.ingest.de.sentry.io/4509049671647312",
-	release: sentryRelease,
-	// Tracing must be enabled for MCP monitoring to work
-	tracesSampleRate: 1.0,
-	sendDefaultPii: false,
-} as const;
-
-Sentry.init(sentryConfig);
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -62,11 +47,10 @@ export const configSchema = serverConfigSchema;
 type ServerConfig = z.infer<typeof serverConfigSchema>;
 
 function buildServer(apiKey: string) {
-	const baseServer = new McpServer({
+	const server = new McpServer({
 		name,
 		version,
 	});
-	const server = Sentry.wrapMcpServerWithSentry(baseServer);
 
 	const hevyClient = createClient(apiKey, HEVY_API_BASEURL);
 	console.error("Hevy client initialized with API key");
