@@ -46,10 +46,13 @@ const serverConfigSchema = z.object({
 export const configSchema = serverConfigSchema;
 type ServerConfig = z.infer<typeof serverConfigSchema>;
 
+const description = "An MCP server implementation that interfaces with the Hevy fitness tracking app and its API. The API only does weights in kgs, but keep in mind that the current user is in lbs so always convert to and from where appropriate."
+
 function buildServer(apiKey: string) {
 	const server = new McpServer({
 		name,
 		version,
+		description
 	});
 
 	const hevyClient = createClient(apiKey, HEVY_API_BASEURL);
